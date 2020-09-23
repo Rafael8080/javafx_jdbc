@@ -15,6 +15,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.VBox;
+import model.services.DepartmentService;
 
 public class MainViewController implements Initializable{
 	
@@ -26,6 +27,8 @@ public class MainViewController implements Initializable{
 	
 	@FXML
 	private MenuItem menuItemAbout;
+
+	private FXMLLoader loader;
 	
 	@FXML
 	public void onMenuItemSellerAction() {
@@ -35,6 +38,7 @@ public class MainViewController implements Initializable{
 	@FXML
 	public void onMenuItemDepartmentAction() {
 		loadView("/gui/DepartmentList.fxml");
+		updateTableView();
 	}
 	
 	@FXML
@@ -51,15 +55,10 @@ public class MainViewController implements Initializable{
 	private synchronized void loadView(String absoluteName) {
 		try {
 			
-			FXMLLoader loader = new FXMLLoader(getClass().getResource(absoluteName));
+			loader = new FXMLLoader(getClass().getResource(absoluteName));
 			VBox newVBox = loader.load();
 			
 			Scene mainScene = Main.getMainScene();
-			/*
-			 * Na minha mainScene eu pego o primeiro nodo, depois com o
-			 *  getContent eu pego o conteúdo de content que é um VBOX
-			 * 
-			 * */
 			VBox mainVBox = (VBox) ((ScrollPane) mainScene.getRoot()).getContent();
 			
 			Node mainMenu = mainVBox.getChildren().get(0);
@@ -72,5 +71,12 @@ public class MainViewController implements Initializable{
 		}
 	}
 
+	private void updateTableView(){
+		DepartmentListController controller = loader.getController(); 
+		controller.setService(new DepartmentService());
+		controller.updateTableView();
+	}
+	
+	
 	
 }
